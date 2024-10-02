@@ -1,4 +1,4 @@
-const { post } = require("../routes/postsRouter");
+const prismaQueries = require("../prisma/prismaQueries");
 
 async function fetchPosts(req, res) {
   try {
@@ -60,6 +60,7 @@ async function deletePost(req, res) {
 
 module.exports = {
   fetchPosts,
+  createPost,
   fetchSinglePost,
   editPost,
   deletePost,

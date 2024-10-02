@@ -11,6 +11,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/posts", postsRouter);
+app.use("/auth", userRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

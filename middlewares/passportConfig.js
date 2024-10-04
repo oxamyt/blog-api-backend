@@ -1,7 +1,5 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const JwtStrategy = require("passport-jwt").Strategy;
-const ExtractJwt = require("passport-jwt").ExtractJwt;
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
@@ -30,28 +28,6 @@ passport.use(
   })
 );
 
-passport.use(
-  new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
-    },
-    async (jwtPayload, done) => {
-      try {
-        const user = await prisma.user.findUnique({
-          where: { id: jwtPayload.id },
-        });
-        if (user) {
-          return done(null, user);
-        }
-        return done(null, false);
-      } catch (error) {
-        return done(error);
-      }
-    }
-  )
-);
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -61,6 +37,11 @@ passport.deserializeUser(async (id, done) => {
     const user = await prisma.user.findUnique({
       where: { id },
     });
+
+    if (!user) {
+      return done(null, false, { message: "User not found" });
+    }
+
     done(null, user);
   } catch (err) {
     done(err);

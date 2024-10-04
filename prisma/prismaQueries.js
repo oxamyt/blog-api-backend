@@ -35,6 +35,7 @@ async function editPost(postId, title, content) {
       content: content,
     },
   });
+  return editedPost;
 }
 
 async function deletePost(postId) {
@@ -43,6 +44,45 @@ async function deletePost(postId) {
       id: postId,
     },
   });
+  return deletedPost;
+}
+
+async function createUser(username, hashedPassword) {
+  const user = await prisma.user.create({
+    data: {
+      username: username,
+      password: hashedPassword,
+    },
+  });
+}
+
+async function createComment(content, postId, authorId) {
+  const comment = await prisma.comment.create({
+    data: {
+      content: content,
+      postId: postId,
+      authorId: authorId,
+    },
+  });
+  return comment;
+}
+
+async function fetchComment(commentId) {
+  const comment = await prisma.comment.findUnique({
+    where: {
+      id: commentId,
+    },
+  });
+  return comment;
+}
+
+async function deleteComment(commentId) {
+  const deletedComment = await prisma.comment.delete({
+    where: {
+      id: commentId,
+    },
+  });
+  return deletedComment;
 }
 
 module.exports = {
@@ -51,4 +91,8 @@ module.exports = {
   createPost,
   editPost,
   deletePost,
+  createUser,
+  createComment,
+  fetchComment,
+  deleteComment,
 };

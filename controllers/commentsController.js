@@ -34,7 +34,18 @@ async function deleteComment(req, res) {
   }
 }
 
+async function fetchComment(req, res) {
+  try {
+    const commentId = parseInt(req.params.commentId);
+    const comment = await prismaQueries.fetchComment(commentId);
+    res.json(comment);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 module.exports = {
   createComment,
+  fetchComment,
   deleteComment,
 };

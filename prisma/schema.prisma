@@ -38,3 +38,10 @@ model Comment {
   authorId  Int      
   author    User     @relation("UserComments", fields: [authorId], references: [id]) 
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt   DateTime
+}

@@ -1,7 +1,9 @@
 const express = require("express");
 const postsRouter = require("./routes/postsRouter");
 const userRouter = require("./routes/userRouter");
-const session = require("express-session");
+const expressSession = require("express-session");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
+const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
 const passport = require("./middlewares/passportConfig");
 const app = express();
@@ -16,13 +18,18 @@ app.use(
 );
 
 app.use(
-  session({
+  expressSession({
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
     secret: process.env.SECRET,
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(new PrismaClient(), {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
   })
 );
 
@@ -36,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  console.log("Session:", req.session);
+  console.log("Sessionn:", req.session);
   console.log("User:", req.user);
   next();
 });

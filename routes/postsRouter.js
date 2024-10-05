@@ -2,7 +2,7 @@ const { Router } = require("express");
 const postsController = require("../controllers/postsController");
 const commentsRouter = require("./commentsRouter");
 
-const postsRouter = Router();
+const postsRouter = Router({ mergeParams: true });
 
 postsRouter.get("/", postsController.fetchPosts);
 postsRouter.get("/:id", postsController.fetchSinglePost);

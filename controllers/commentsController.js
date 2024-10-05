@@ -44,8 +44,28 @@ async function fetchComment(req, res) {
   }
 }
 
+async function editComment(req, res) {
+  try {
+    const { content } = req.body;
+    const authorId = parseInt(req.user.id);
+    const commentId = parseInt(req.params.commentId);
+    const comment = await prismaQueries.fetchComment(commentId);
+    if (authorId === comment.authorId) {
+      const editedComment = await prismaQueries.editComment(commentId, content);
+      res.json(editedComment);
+    } else {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to edit this post" });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 module.exports = {
   createComment,
   fetchComment,
   deleteComment,
+  editComment,
 };

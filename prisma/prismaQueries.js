@@ -23,6 +23,7 @@ async function createPost(title, content, authorId) {
       authorId: authorId,
     },
   });
+  return post;
 }
 
 async function editPost(postId, title, content) {
@@ -85,6 +86,18 @@ async function deleteComment(commentId) {
   return deletedComment;
 }
 
+async function editComment(commentId, content) {
+  const editedComment = await prisma.comment.update({
+    where: {
+      id: commentId,
+    },
+    data: {
+      content: content,
+    },
+  });
+  return editedComment;
+}
+
 module.exports = {
   fetchPosts,
   fetchSinglePost,
@@ -95,4 +108,5 @@ module.exports = {
   createComment,
   fetchComment,
   deleteComment,
+  editComment,
 };

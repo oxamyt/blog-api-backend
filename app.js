@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  console.log("Sessionn:", req.session);
+  console.log("Session:", req.session);
   console.log("User:", req.user);
   next();
 });

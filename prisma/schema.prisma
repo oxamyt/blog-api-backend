@@ -9,12 +9,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
   id          Int      @id @default(autoincrement())
   username    String   @unique 
   password    String   
   posts       Post[]   @relation("AuthorPosts") 
   comments    Comment[] @relation("UserComments") 
+  role        UserRole @default(USER)
 }
 
 model Post {

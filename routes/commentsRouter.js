@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const passport = require("../middlewares/passportConfig");
 const commentsController = require("../controllers/commentsController");
+const isAdmin = require("../middlewares/isAdmin");
 
 const commentsRouter = Router({ mergeParams: true });
 

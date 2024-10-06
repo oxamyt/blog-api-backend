@@ -98,6 +98,18 @@ async function editComment(commentId, content) {
   return editedComment;
 }
 
+async function updateRole(userId) {
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      role: "ADMIN",
+    },
+  });
+  return updatedUser;
+}
+
 module.exports = {
   fetchPosts,
   fetchSinglePost,
@@ -109,4 +121,5 @@ module.exports = {
   fetchComment,
   deleteComment,
   editComment,
+  updateRole,
 };

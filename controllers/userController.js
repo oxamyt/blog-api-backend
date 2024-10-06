@@ -58,4 +58,34 @@ async function logout(req, res, next) {
   }
 }
 
-module.exports = { register, logout, login };
+async function updateRole(req, res) {
+  try {
+    const { password } = req.body;
+    if (password === process.env.ADMIN_PASSWORD) {
+      const userId = parseInt(req.user.id);
+      const updatedUser = await prismaQueries.updateRole(userId);
+
+      const newToken = jwt.sign(
+        {
+          id: updatedUser.id,
+          role: updatedUser.role,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      return res.status(200).json({
+        message: "Role updated successfully",
+        token: newToken,
+      });
+    }
+
+    return res.status(403).json({ message: "Wrong Password" });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+module.exports = { register, logout, login, updateRole };

@@ -4,3 +4,5 @@ const isAdmin = (req, res, next) => {
   }
   return res.status(404).send("Admins only");
 };
+
+module.exports = isAdmin;

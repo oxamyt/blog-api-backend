@@ -64,10 +64,32 @@ async function deletePost(req, res) {
   }
 }
 
+async function editPublishedState(req, res) {
+  try {
+    const authorId = parseInt(req.user.id);
+    const postId = parseInt(req.params.id);
+    const post = await prismaQueries.fetchSinglePost(postId);
+    if (authorId === post.authorId) {
+      const editPublishedStatePost = await prismaQueries.editPublishedState(
+        postId,
+        post.isPublished
+      );
+      res.json(editPublishedStatePost);
+    } else {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to edit this post" });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 module.exports = {
   fetchPosts,
   createPost,
   fetchSinglePost,
   editPost,
   deletePost,
+  editPublishedState,
 };

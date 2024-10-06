@@ -3,7 +3,6 @@ const postsController = require("../controllers/postsController");
 const commentsRouter = require("./commentsRouter");
 const passport = require("../middlewares/passportConfig");
 const isAdmin = require("../middlewares/isAdmin");
-const authenticateJWT = require("../middlewares/authJWT");
 
 const postsRouter = Router({ mergeParams: true });
 
@@ -25,6 +24,12 @@ postsRouter.put(
   passport.authenticate("jwt"),
   isAdmin,
   postsController.editPost
+);
+postsRouter.patch(
+  "/:id",
+  passport.authenticate("jwt"),
+  isAdmin,
+  postsController.editPublishedState
 );
 postsRouter.delete(
   "/:id",

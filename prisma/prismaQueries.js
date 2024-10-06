@@ -110,6 +110,18 @@ async function updateRole(userId) {
   return updatedUser;
 }
 
+async function editPublishedState(postId, currentIsPublished) {
+  const updatedPostPublishedState = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      isPublished: !currentIsPublished,
+    },
+  });
+  return updatedPostPublishedState;
+}
+
 module.exports = {
   fetchPosts,
   fetchSinglePost,
@@ -122,4 +134,5 @@ module.exports = {
   deleteComment,
   editComment,
   updateRole,
+  editPublishedState,
 };

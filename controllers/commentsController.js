@@ -10,9 +10,10 @@ async function createComment(req, res) {
       postId,
       authorId
     );
-    res.json(comment);
+    return res.status(201).json(comment);
   } catch (err) {
     console.error(err);
+    return res.status(500).json({ message: "Failed to create comment" });
   }
 }
 
@@ -23,7 +24,7 @@ async function deleteComment(req, res) {
     const comment = await prismaQueries.fetchComment(commentId);
     if (authorId === comment.authorId) {
       const deletedComment = await prismaQueries.deleteComment(commentId);
-      return res.json(deletedComment);
+      return res.status(200).json(deletedComment);
     } else {
       return res
         .status(403)
@@ -38,7 +39,7 @@ async function fetchComment(req, res) {
   try {
     const commentId = parseInt(req.params.commentId);
     const comment = await prismaQueries.fetchComment(commentId);
-    res.json(comment);
+    return res.json(comment);
   } catch (err) {
     console.error(err);
   }
@@ -52,7 +53,7 @@ async function editComment(req, res) {
     const comment = await prismaQueries.fetchComment(commentId);
     if (authorId === comment.authorId) {
       const editedComment = await prismaQueries.editComment(commentId, content);
-      res.json(editedComment);
+      return res.status(201).json(editedComment);
     } else {
       return res
         .status(403)

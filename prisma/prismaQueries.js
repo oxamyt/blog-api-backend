@@ -2,124 +2,137 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function fetchPosts() {
-  const posts = await prisma.post.findMany();
-  return posts;
+  try {
+    return await prisma.post.findMany();
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    throw new Error("Could not fetch posts.");
+  }
 }
 
 async function fetchSinglePost(postId) {
-  const post = await prisma.post.findUnique({
-    where: {
-      id: postId,
-    },
-  });
-  return post;
+  try {
+    return await prisma.post.findUnique({
+      where: { id: postId },
+    });
+  } catch (err) {
+    console.error("Error fetching post:", err);
+    throw new Error("Could not fetch the post.");
+  }
 }
 
 async function createPost(title, content, authorId) {
-  const post = await prisma.post.create({
-    data: {
-      title: title,
-      content: content,
-      authorId: authorId,
-    },
-  });
-  return post;
+  try {
+    return await prisma.post.create({
+      data: { title, content, authorId },
+    });
+  } catch (err) {
+    console.error("Error creating post:", err);
+    throw new Error("Could not create the post.");
+  }
 }
 
 async function editPost(postId, title, content) {
-  const editedPost = await prisma.post.update({
-    where: {
-      id: postId,
-    },
-    data: {
-      title: title,
-      content: content,
-    },
-  });
-  return editedPost;
+  try {
+    return await prisma.post.update({
+      where: { id: postId },
+      data: { title, content },
+    });
+  } catch (err) {
+    console.error("Error editing post:", err);
+    throw new Error("Could not edit the post.");
+  }
 }
 
 async function deletePost(postId) {
-  const deletedPost = await prisma.post.delete({
-    where: {
-      id: postId,
-    },
-  });
-  return deletedPost;
+  try {
+    return await prisma.post.delete({
+      where: { id: postId },
+    });
+  } catch (err) {
+    console.error("Error deleting post:", err);
+    throw new Error("Could not delete the post.");
+  }
 }
 
 async function createUser(username, hashedPassword) {
-  const user = await prisma.user.create({
-    data: {
-      username: username,
-      password: hashedPassword,
-    },
-  });
+  try {
+    return await prisma.user.create({
+      data: { username, password: hashedPassword },
+    });
+  } catch (err) {
+    console.error("Error creating user:", err);
+    throw new Error("Could not create the user.");
+  }
 }
 
 async function createComment(content, postId, authorId) {
-  const comment = await prisma.comment.create({
-    data: {
-      content: content,
-      postId: postId,
-      authorId: authorId,
-    },
-  });
-  return comment;
+  try {
+    return await prisma.comment.create({
+      data: { content, postId, authorId },
+    });
+  } catch (err) {
+    console.error("Error creating comment:", err);
+    throw new Error("Could not create the comment.");
+  }
 }
 
 async function fetchComment(commentId) {
-  const comment = await prisma.comment.findUnique({
-    where: {
-      id: commentId,
-    },
-  });
-  return comment;
+  try {
+    return await prisma.comment.findUnique({
+      where: { id: commentId },
+    });
+  } catch (err) {
+    console.error("Error fetching comment:", err);
+    throw new Error("Could not fetch the comment.");
+  }
 }
 
 async function deleteComment(commentId) {
-  const deletedComment = await prisma.comment.delete({
-    where: {
-      id: commentId,
-    },
-  });
-  return deletedComment;
+  try {
+    return await prisma.comment.delete({
+      where: { id: commentId },
+    });
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    throw new Error("Could not delete the comment.");
+  }
 }
 
 async function editComment(commentId, content) {
-  const editedComment = await prisma.comment.update({
-    where: {
-      id: commentId,
-    },
-    data: {
-      content: content,
-    },
-  });
-  return editedComment;
+  try {
+    return await prisma.comment.update({
+      where: { id: commentId },
+      data: { content },
+    });
+  } catch (err) {
+    console.error("Error editing comment:", err);
+    throw new Error("Could not edit the comment.");
+  }
 }
 
 async function updateRole(userId) {
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      role: "ADMIN",
-    },
-  });
-  return updatedUser;
+  try {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { role: "ADMIN" },
+    });
+  } catch (err) {
+    console.error("Error updating user role:", err);
+    throw new Error("Could not update user role.");
+  }
 }
 
 async function editPublishedState(postId, currentIsPublished) {
-  const updatedPostPublishedState = await prisma.post.update({
-    where: {
-      id: postId,
-    },
-    data: {
-      isPublished: !currentIsPublished,
-    },
-  });
-  return updatedPostPublishedState;
+  try {
+    return await prisma.post.update({
+      where: { id: postId },
+      data: { isPublished: !currentIsPublished },
+    });
+  } catch (err) {
+    console.error("Error updating post published state:", err);
+    throw new Error("Could not update the post's published state.");
+  }
 }
 
 module.exports = {

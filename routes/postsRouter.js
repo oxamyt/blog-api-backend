@@ -6,34 +6,38 @@ const isAdmin = require("../middlewares/isAdmin");
 
 const postsRouter = Router({ mergeParams: true });
 
-postsRouter.get("/", passport.authenticate("jwt"), postsController.fetchPosts);
+postsRouter.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  postsController.fetchPosts
+);
 postsRouter.get(
   "/:id",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   postsController.fetchSinglePost
 );
 
 postsRouter.post(
   "/",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   isAdmin,
   postsController.createPost
 );
 postsRouter.put(
   "/:id",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   isAdmin,
   postsController.editPost
 );
 postsRouter.patch(
   "/:id",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   isAdmin,
   postsController.editPublishedState
 );
 postsRouter.delete(
   "/:id",
-  passport.authenticate("jwt"),
+  passport.authenticate("jwt", { session: false }),
   isAdmin,
   postsController.deletePost
 );

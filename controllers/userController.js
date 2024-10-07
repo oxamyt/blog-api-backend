@@ -4,6 +4,12 @@ const passport = require("../middlewares/passportConfig");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+function signToken(user) {
+  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
+}
+
 async function register(req, res) {
   const { username, password } = req.body;
   try {
@@ -34,13 +40,7 @@ async function login(req, res) {
         return res.status(500).json({ message: "Internal server error" });
       }
 
-      const token = jwt.sign(
-        { id: user.id, role: user.role },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const token = signToken(user);
 
       return res.status(200).json({ message: "Login successful", token, user });
     });
@@ -51,10 +51,12 @@ async function logout(req, res, next) {
   try {
     req.logout((err) => {
       if (err) return next(err);
+      res.status(200).json({ message: "Logout successful" });
       res.redirect("/");
     });
   } catch (err) {
-    handleError(res, err);
+    console.error("Error during logout:", err);
+    res.status(500).json({ message: "Logout failed" });
   }
 }
 
@@ -65,16 +67,7 @@ async function updateRole(req, res) {
       const userId = parseInt(req.user.id);
       const updatedUser = await prismaQueries.updateRole(userId);
 
-      const newToken = jwt.sign(
-        {
-          id: updatedUser.id,
-          role: updatedUser.role,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const newToken = signToken(updatedUser);
 
       return res.status(200).json({
         message: "Role updated successfully",
@@ -84,7 +77,8 @@ async function updateRole(req, res) {
 
     return res.status(403).json({ message: "Wrong Password" });
   } catch (err) {
-    console.error(err);
+    console.error("Error during role update:", err);
+    res.status(500).json({ message: "Failed to update role" });
   }
 }
 

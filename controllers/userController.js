@@ -18,6 +18,7 @@ async function register(req, res) {
     res.status(201).json({ message: "User registered successfully", user });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: "Error registering user" });
   }
 }
 
@@ -52,7 +53,6 @@ async function logout(req, res, next) {
     req.logout((err) => {
       if (err) return next(err);
       res.status(200).json({ message: "Logout successful" });
-      res.redirect("/");
     });
   } catch (err) {
     console.error("Error during logout:", err);

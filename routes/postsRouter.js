@@ -3,6 +3,10 @@ const postsController = require("../controllers/postsController");
 const commentsRouter = require("./commentsRouter");
 const passport = require("../middlewares/passportConfig");
 const isAdmin = require("../middlewares/isAdmin");
+const {
+  validatePost,
+  handleValidationErrors,
+} = require("../middlewares/validation");
 
 const postsRouter = Router({ mergeParams: true });
 
@@ -21,11 +25,15 @@ postsRouter.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   isAdmin,
+  validatePost,
+  handleValidationErrors,
   postsController.createPost
 );
 postsRouter.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
+  validatePost,
+  handleValidationErrors,
   isAdmin,
   postsController.editPost
 );

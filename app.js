@@ -38,16 +38,6 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.use((req, res, next) => {
-  console.log("Session:", req.session);
-  console.log("User:", req.user);
-  next();
-});
-
 app.use("/posts", postsRouter);
 app.use("/auth", userRouter);
 

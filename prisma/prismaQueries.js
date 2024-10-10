@@ -3,7 +3,11 @@ const prisma = new PrismaClient();
 
 async function fetchPosts() {
   try {
-    return await prisma.post.findMany();
+    return await prisma.post.findMany({
+      include: {
+        comments: true,
+      },
+    });
   } catch (err) {
     console.error("Error fetching posts:", err);
     throw new Error("Could not fetch posts.");
@@ -14,6 +18,9 @@ async function fetchSinglePost(postId) {
   try {
     return await prisma.post.findUnique({
       where: { id: postId },
+      include: {
+        comments: true,
+      },
     });
   } catch (err) {
     console.error("Error fetching post:", err);

@@ -5,7 +5,15 @@ async function fetchPosts() {
   try {
     return await prisma.post.findMany({
       include: {
-        comments: true,
+        comments: {
+          include: {
+            author: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
   } catch (err) {
@@ -19,7 +27,15 @@ async function fetchSinglePost(postId) {
     return await prisma.post.findUnique({
       where: { id: postId },
       include: {
-        comments: true,
+        comments: {
+          include: {
+            author: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
       },
     });
   } catch (err) {

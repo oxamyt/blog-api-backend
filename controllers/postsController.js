@@ -2,8 +2,10 @@ const prismaQueries = require("../prisma/prismaQueries");
 
 async function fetchPosts(req, res) {
   try {
-    const posts = await prismaQueries.fetchPosts();
+    const userId = parseInt(req.user.id);
+    const User = await prismaQueries.getUser(userId);
 
+    const posts = await prismaQueries.fetchPosts(User.role);
     res.status(200).json(posts);
   } catch (err) {
     console.error("Error fetching posts:", err);

@@ -1,47 +1,49 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-async function fetchPosts() {
-  try {
-    return await prisma.post.findMany({
-      include: {
-        comments: {
-          include: {
-            author: {
-              select: {
-                username: true,
-              },
-            },
-          },
+const includeComments = {
+  comments: {
+    include: {
+      author: {
+        select: {
+          username: true,
         },
       },
-    });
+    },
+  },
+};
+
+async function fetchPosts(role) {
+  if (!role) {
+    throw new Error("Role is required to fetch posts.");
+  }
+
+  try {
+    const queryOptions = {
+      include: includeComments,
+      where: role !== "ADMIN" ? { isPublished: true } : {},
+    };
+
+    return await prisma.post.findMany(queryOptions);
   } catch (err) {
-    console.error("Error fetching posts:", err);
-    throw new Error("Could not fetch posts.");
+    console.error(`Error fetching posts for role '${role}':`, err);
+    throw new Error("Could not fetch posts. Please try again later.");
   }
 }
 
 async function fetchSinglePost(postId) {
+  if (!postId) {
+    throw new Error("Post ID is required to fetch a single post.");
+  }
+
   try {
     return await prisma.post.findUnique({
       where: { id: postId },
-      include: {
-        comments: {
-          include: {
-            author: {
-              select: {
-                id: true,
-                username: true,
-              },
-            },
-          },
-        },
-      },
+      include: includeComments,
     });
   } catch (err) {
-    console.error("Error fetching post:", err);
-    throw new Error("Could not fetch the post.");
+    console.error(`Error fetching post with ID '${postId}':`, err);
+    throw new Error("Could not fetch the post. Please try again later.");
   }
 }
 

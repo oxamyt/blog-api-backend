@@ -6,7 +6,7 @@ require("dotenv").config();
 
 function signToken(user) {
   return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "5h",
   });
 }
 
@@ -15,7 +15,7 @@ async function register(req, res) {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prismaQueries.createUser(username, hashedPassword);
-    res.status(201).json({ message: "User registered successfully", user });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error registering user" });

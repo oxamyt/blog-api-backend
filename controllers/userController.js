@@ -82,4 +82,18 @@ async function updateRole(req, res) {
   }
 }
 
-module.exports = { register, logout, login, updateRole };
+async function getUser(req, res) {
+  try {
+    const userId = parseInt(req.user.id);
+    const User = await prismaQueries.getUser(userId);
+
+    return res.status(200).json({
+      user: User,
+    });
+  } catch (err) {
+    console.error("Error during fetching user", err);
+    res.status(500).json({ message: "Failed to update role" });
+  }
+}
+
+module.exports = { register, logout, login, updateRole, getUser };

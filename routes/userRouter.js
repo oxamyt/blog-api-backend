@@ -23,4 +23,10 @@ userRouter.post(
   userController.updateRole
 );
 
+userRouter.post(
+  "/get-user",
+  passport.authenticate("jwt"),
+  userController.getUser
+);
+
 module.exports = userRouter;

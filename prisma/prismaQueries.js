@@ -31,6 +31,7 @@ async function fetchSinglePost(postId) {
           include: {
             author: {
               select: {
+                id: true,
                 username: true,
               },
             },
@@ -86,6 +87,19 @@ async function createUser(username, hashedPassword) {
   } catch (err) {
     console.error("Error creating user:", err);
     throw new Error("Could not create the user.");
+  }
+}
+
+async function getUser(userId) {
+  try {
+    return await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    throw new Error("Could not fetch user");
   }
 }
 
@@ -165,6 +179,7 @@ module.exports = {
   editPost,
   deletePost,
   createUser,
+  getUser,
   createComment,
   fetchComment,
   deleteComment,

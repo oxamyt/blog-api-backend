@@ -23,7 +23,7 @@ commentsRouter.put(
   commentsController.editComment
 );
 commentsRouter.delete(
-  "/:postId/:commentId",
+  "/:commentId",
   passport.authenticate("jwt", { session: false }),
   commentsController.deleteComment
 );

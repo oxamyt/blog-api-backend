@@ -42,18 +42,11 @@ async function createPost(req, res) {
 async function editPost(req, res) {
   try {
     const { title, content } = req.body;
-    const authorId = parseInt(req.user.id);
     const postId = parseInt(req.params.id);
 
     const post = await prismaQueries.fetchSinglePost(postId);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
-
-    if (authorId !== post.authorId) {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized to edit this post" });
-    }
 
     const editedPost = await prismaQueries.editPost(postId, title, content);
     res.status(200).json(editedPost);
@@ -65,17 +58,10 @@ async function editPost(req, res) {
 
 async function deletePost(req, res) {
   try {
-    const authorId = parseInt(req.user.id);
     const postId = parseInt(req.params.id);
     const post = await prismaQueries.fetchSinglePost(postId);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
-
-    if (authorId !== post.authorId) {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized to delete this post" });
-    }
 
     const deletedPost = await prismaQueries.deletePost(postId);
     res.status(200).json(deletedPost);
@@ -87,16 +73,9 @@ async function deletePost(req, res) {
 
 async function editPublishedState(req, res) {
   try {
-    const authorId = parseInt(req.user.id);
     const postId = parseInt(req.params.id);
     const post = await prismaQueries.fetchSinglePost(postId);
     if (!post) return res.status(404).json({ message: "Post not found" });
-
-    if (authorId !== post.authorId) {
-      return res
-        .status(403)
-        .json({ message: "Unauthorized to edit this post" });
-    }
 
     const updatedPost = await prismaQueries.editPublishedState(
       postId,

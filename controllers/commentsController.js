@@ -20,9 +20,11 @@ async function createComment(req, res) {
 async function deleteComment(req, res) {
   try {
     const authorId = parseInt(req.user.id);
+    const User = await prismaQueries.getUser(authorId);
+
     const commentId = parseInt(req.params.commentId);
     const comment = await prismaQueries.fetchComment(commentId);
-    if (authorId === comment.authorId) {
+    if (User.role === "ADMIN" || authorId === comment.authorId) {
       const deletedComment = await prismaQueries.deleteComment(commentId);
       return res.status(200).json(deletedComment);
     } else {
